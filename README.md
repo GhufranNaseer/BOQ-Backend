@@ -166,10 +166,11 @@ npm install && npm run build && npx prisma generate
 
 **Start Command:**
 ```bash
-npx prisma migrate deploy && node dist/src/main
+node dist/main.js
 ```
 
 > **Important:** The start command uses `node dist/src/main` (NOT `dist/main`)
+> **Important:** The start command should be `node dist/main.js` (or use `npm start`).
 
 #### Step 6: Environment Variables
 

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "BOQ Task Management Backend API",
   "main": "dist/main.js",
+  "engines": {
+    "node": ">=18"
+  },
   "author": "Badar Expo Solutions",
   "private": true,
   "license": "UNLICENSED",
