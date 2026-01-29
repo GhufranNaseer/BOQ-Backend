@@ -10,6 +10,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+  "prebuild": "prisma generate",
   "build": "tsc -p tsconfig.build.json",
   "build:prod": "nest build --webpack",
   "build:production": "npm install && npm run build && npx prisma generate",
