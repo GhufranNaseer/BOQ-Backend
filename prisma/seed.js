@@ -26,21 +26,25 @@ async function main() {
             name: 'Operations',
         },
     });
+    const HRDept = await prisma.department.upsert({
+        where: { name: 'HR' },
+        update: {},
+        create: {
+            name: 'HR',
+        },
+    });
     console.log('✓ Departments created');
-
-    // Credentials MUST be provided in environment variables
     const adminEmail = process.env.SEED_ADMIN_EMAIL;
     const adminPassword = process.env.SEED_ADMIN_PASSWORD;
     const techPassword = process.env.SEED_TECH_PASSWORD;
     const logisticsPassword = process.env.SEED_LOGISTICS_PASSWORD;
     const operationsPassword = process.env.SEED_OPERATIONS_PASSWORD;
-
-    if (!adminEmail || !adminPassword || !techPassword || !logisticsPassword || !operationsPassword) {
+    const HRPassword = process.env.SEED_HR_PASSWORD;
+    if (!adminEmail || !adminPassword || !techPassword || !logisticsPassword || !operationsPassword || !HRPassword) {
         console.error('❌ Error: Missing required seed credentials in environment variables.');
         console.info('Please check SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD, etc. in your .env file.');
         process.exit(1);
     }
-
     const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
     const admin = await prisma.user.upsert({
         where: { email: adminEmail },
@@ -89,6 +93,18 @@ async function main() {
             departmentId: operationsDept.id,
         },
     });
+    const hashedHRPassword = await bcrypt.hash(HRPassword, 10);
+    const HRUser = await prisma.user.upsert({
+        where: { email: 'HR@badarexpo.com' },
+        update: {},
+        create: {
+            email: 'HR@badarexpo.com',
+            passwordHash: hashedHRPassword,
+            name: 'HR Department User',
+            role: 'DEPARTMENT_USER',
+            departmentId: HRDept.id,
+        },
+    });
     console.log('✓ Department users created');
     console.log('\n=== Seed Summary ===');
     console.log('Departments:', 3);
@@ -99,10 +115,10 @@ async function main() {
 }
 main()
     .catch((e) => {
-        console.error('Error seeding database:', e);
-        process.exit(1);
-    })
+    console.error('Error seeding database:', e);
+    process.exit(1);
+})
     .finally(async () => {
-        await prisma.$disconnect();
-    });
+    await prisma.$disconnect();
+});
 //# sourceMappingURL=seed.js.map
