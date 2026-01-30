@@ -8,14 +8,12 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    // Enable CORS
-    const allowedOrigins = process.env.FRONTEND_URL
-        ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-        : ['http://localhost:5173'];
-
+    // Enable CORS - Re-applied Fix for Production
     app.enableCors({
-        origin: allowedOrigins,
-        credentials: true,
+        origin: '*', // Allow all origins to resolve net::ERR_FAILED
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+        credentials: false, // Must be false when origin is '*'
     });
 
     // Global validation pipe
